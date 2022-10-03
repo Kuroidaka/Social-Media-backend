@@ -2,8 +2,10 @@ const User = require('../models/users')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const authemControllers = {
+let refreshTokens = []
 
+const authemControllers = {
+    
 // generate access token 
     generateAccessToken: (user) => {
         return jwt.sign(
@@ -12,11 +14,11 @@ const authemControllers = {
                 admin: user.admin
             },
             process.env.JWT_ACCESS_KEY,
-            {expiresIn: '30s'}
+            {expiresIn: '20s'}
         )
     },
 // generate refresh token 
-generateRefreshToken: (user) => {
+    generateRefreshToken: (user) => {
     return jwt.sign(
         {
             id: user.id,
@@ -25,7 +27,7 @@ generateRefreshToken: (user) => {
         process.env.JWT_REFRESH_KEY,
         {expiresIn: '360d'}
     )
-},
+    },
 
 // register
     register: async (req, res) => {
@@ -52,11 +54,13 @@ generateRefreshToken: (user) => {
 // login
     login: async (req, res) => {
         try{
+            // check user exist in db
             const user = await User.findOne({username: req.body.username})
             if(!user) {
                 res.status(404).json('wrong user name')
             }
-          
+            
+            // compare password 
             const validPassword = await bcrypt.compare(
                 req.body.password,
                 user.password
@@ -64,9 +68,17 @@ generateRefreshToken: (user) => {
             if(!validPassword) {
                 res.status(404).json('wrong password')
             }
+
+
             if(user && validPassword) {
+                // create token, refresh token
                 const accessToken = authemControllers.generateAccessToken(user)
                 const refreshToken = authemControllers.generateRefreshToken(user)
+            
+                refreshTokens.push(refreshToken)
+
+                // save refresh token to cookie
+
                 res.cookie('refreshToken', refreshToken, {
                     httpOnly: true,
                     secure: false,
@@ -74,6 +86,7 @@ generateRefreshToken: (user) => {
                     sameSite: 'strict'
                 })
 
+                // remove password from object
                 const { password, ...other } = user._doc
                 res.status(200).json({...other, accessToken})
             }
@@ -82,7 +95,40 @@ generateRefreshToken: (user) => {
             res.status(500).json(error)
         }
 
-    }    
+    },
+    requestRefreshToken: async (req, res) => {
+        const refreshToken = req.cookies.refreshToken
+
+
+
+        if(!refreshToken) res.status(401).json('Not logged yet')
+        // if(!refreshTokens.includes(refreshToken))
+        //    return res.status(403).json('Refresh is not valid')
+        jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (error, user) => {
+            if(error){
+                console.log(error)
+            }
+
+           refreshTokens = refreshTokens.filter(token => token !== refreshToken)
+
+            // Create new access token, refresh token
+            const newAccessToken = authemControllers.generateAccessToken(user)
+            const newRefreshToken = authemControllers.generateRefreshToken(user)
+
+            refreshTokens.push(newRefreshToken)
+
+            res.cookie('refreshToken', newRefreshToken, {
+                httpOnly: true,
+                secure: false,
+                path: '/',
+                sameSite: 'strict'
+            })
+
+         res.status(200).json({accessToken: newAccessToken})
+
+        })
+            
+    } 
 }
 
 module.exports = authemControllers

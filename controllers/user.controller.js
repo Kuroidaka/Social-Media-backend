@@ -4,10 +4,10 @@ const userController = {
     getAllUsers: async (req, res) => {
         try{
             const user = await User.find()
-            res.status(200).json(user)
+            return res.status(200).json(user)
         }
         catch(error){
-            res.status(500).json(error)
+            return res.status(500).json(error)
         }       
     },
     deleteUser: async (req, res) => {
@@ -19,15 +19,7 @@ const userController = {
             res.status(500).json(error)
         }
     },
-    deleteAll: async (req, res) => {
-        try{
-            const user = await User.deleteMany({})
-            res.status(200).json('deleted all')
-        }
-        catch(error){
-            res.status(500).json(error)
-        }
-    }
+    
 
 }
 

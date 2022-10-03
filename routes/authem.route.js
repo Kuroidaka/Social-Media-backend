@@ -10,4 +10,7 @@ router.post('/register', authemControllers.register)
 // login
 router.post('/login', authemControllers.login)
 
+// request refresh token
+router.post('/refresh', authemControllers.requestRefreshToken)
+
 module.exports = router

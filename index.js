@@ -23,7 +23,7 @@ app.use(
         extended: true,
     }),
 );
-app.use(cors())
+app.use(cors()) 
 app.use(cookieParser())
 app.use(morgan('dev'))
 
@@ -33,7 +33,7 @@ routes(app)
 // app.use('/authem', authemRouter)
 
 
-app.listen('8080', () => {
-    console.log('listening on port 8080')
+app.listen('8000', () => {
+    console.log('listening on port 8000')
 })
 
