@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 const authemControllers = require('../controllers/authem.controller')
+const middlewareController = require('../controllers/middlewareController')
 
 // register
 router.post('/register', authemControllers.register)
@@ -13,4 +14,6 @@ router.post('/login', authemControllers.login)
 // request refresh token
 router.post('/refresh', authemControllers.requestRefreshToken)
 
+// logout
+router.post('/logout/:id', middlewareController.verifyToken, authemControllers.logout)
 module.exports = router

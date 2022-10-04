@@ -14,7 +14,7 @@ const authemControllers = {
                 admin: user.admin
             },
             process.env.JWT_ACCESS_KEY,
-            {expiresIn: '20s'}
+            {expiresIn: '360d'}
         )
     },
 // generate refresh token 
@@ -38,6 +38,9 @@ const authemControllers = {
             
             // create new User
             const newUser = await new User({
+                info: {
+                    name: req.body.name
+                },
                 username: req.body.username,
                 password: hashed
             })
@@ -87,8 +90,14 @@ const authemControllers = {
                 })
 
                 // remove password from object
-                const { password, ...other } = user._doc
-                res.status(200).json({...other, accessToken})
+                // const { password, ...other } = user._doc
+                
+                await User.updateOne({username: req.body.username}, {$set:{ accessToken: accessToken}})
+                
+                const newUser = await User.find({username: req.body.username})
+                    console.log(newUser[0])
+
+                return res.status(200).json(newUser[0])
             }
         }
         catch(error){
@@ -128,7 +137,23 @@ const authemControllers = {
 
         })
             
-    } 
+    },
+    logout: async (req, res) => {
+        const refreshToken = req.cookies.refreshToken
+        console.log('REFRESH TOKEN IN CONTROLLER',refreshToken);
+
+        res.clearCookie('refreshToken')
+
+        refreshTokens = refreshTokens.filter(token => token!== refreshToken)
+        res.status(200).json('logged out')
+    }
+
 }
 
 module.exports = authemControllers
+
+// // bug 
+// refreshTokens = refreshTokens.filter(token => token!== req.cookies.refreshToken)
+// ^
+
+// TypeError: Cannot read properties of undefined (reading 'refreshToken')
