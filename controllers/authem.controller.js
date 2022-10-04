@@ -95,7 +95,7 @@ const authemControllers = {
                 await User.updateOne({username: req.body.username}, {$set:{ accessToken: accessToken}})
                 
                 const newUser = await User.find({username: req.body.username})
-                    console.log(newUser[0])
+                    // console.log(newUser[0])
 
                 return res.status(200).json(newUser[0])
             }
@@ -140,7 +140,7 @@ const authemControllers = {
     },
     logout: async (req, res) => {
         const refreshToken = req.cookies.refreshToken
-        console.log('REFRESH TOKEN IN CONTROLLER',refreshToken);
+        // console.log('REFRESH TOKEN IN CONTROLLER',refreshToken);
 
         res.clearCookie('refreshToken')
 
