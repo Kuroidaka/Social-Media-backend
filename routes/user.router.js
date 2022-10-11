@@ -3,9 +3,10 @@ const router = express.Router()
 const middlewareController = require('../controllers/middlewareController')
 const userController = require('../controllers/user.controller')
 
-router.get('/getAllUsers', middlewareController.verifyToken, userController.getAllUsers)
-router.delete('/:id', middlewareController.verifyTokenAndAdminAuth, userController.deleteUser)
-router.post('/updateInfo/:id', middlewareController.verifyTokenAndAdminAuth, userController.updateInfo)
-router.get('/getUser/:id', userController.getUser)
 
+router.get('/getAll', userController.getAll)
+router.delete('/:userId', middlewareController.verifyTokenAndAdminAuth, userController.deleteUser)
+router.post('/updateInfo/:userId', middlewareController.verifyTokenAndAdminAuth, userController.updateInfo)
+router.get('/getUser/:userId', userController.getUser)
+router.get('/search', userController.search)
 module.exports = router

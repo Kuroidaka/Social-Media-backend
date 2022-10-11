@@ -60,7 +60,7 @@ const authemControllers = {
             // check user exist in db
             const user = await User.findOne({username: req.body.username})
             if(!user) {
-                res.status(404).json('wrong user name')
+                return res.status(404).json('username or password is not correct')
             }
             
             // compare password 
@@ -69,7 +69,7 @@ const authemControllers = {
                 user.password
             )
             if(!validPassword) {
-                res.status(404).json('wrong password')
+                return res.status(404).json('username or password is not correct')
             }
 
 
@@ -82,13 +82,14 @@ const authemControllers = {
 
                 // save refresh token to cookie
 
-                res.cookie('refreshToken', refreshToken, {
+                res.cookie('accessToken', accessToken, {
                     httpOnly: true,
                     secure: false,
                     path: '/',
                     sameSite: 'strict'
                 })
 
+                
                 // remove password from object
                 // const { password, ...other } = user._doc
                 

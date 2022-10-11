@@ -1,8 +1,7 @@
-const { findOne, findById } = require('../models/users')
 const User = require('../models/users')
 
 const userController = {
-    getAllUsers: async (req, res) => {
+    getAll: async (req, res) => {
         try{
             const user = await User.find()
             return res.status(200).json(user)
@@ -13,7 +12,7 @@ const userController = {
     },
     getUser: async (req, res) => {
         try{
-            const user = await User.findById(req.params.id)
+            const user = await User.findById(req.params.userId)
             return res.status(200).json(user)
 
         }
@@ -21,12 +20,10 @@ const userController = {
             return res.status(500).json(error)
         }
         
-        
-
     },
     deleteUser: async (req, res) => {
         try{
-            const user = await User.findById(req.params.id)
+            const user = await User.findById(req.params.userId)
             return res.status(200).json('delete successfully')
         }
         catch(error){
@@ -46,7 +43,7 @@ const userController = {
                 theme: req.body.theme,  
             }
 
-            const user = await User.findByIdAndUpdate(req.params.id, 
+            const user = await User.findByIdAndUpdate(req.params.userId, 
             {info: info},
             {
                 new: true,
@@ -59,6 +56,21 @@ const userController = {
             return res.status(500).json(error)
         }
         
+    },
+    search: async(req, res) => {
+        try {
+         const data = await User.find({ 
+           $or:[
+                {
+                    'info.name':{$regex : req.query.key}
+                }
+
+            ]
+        })
+            res.status(200).json(data)
+        } catch (error) {
+            res.status(404).json('not found')
+        }
     }
 
 }

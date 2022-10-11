@@ -7,8 +7,10 @@ const postControllers = {
         try{
             const newPost = await new Post({
                 postText: req.body.postText,
-                postImg: req.body.postImg,
-                userId: req.params.userId
+                userId: req.params.userId,
+                name: req.body.name,
+                avatarUrl: req.body.avatarUrl,
+
             })
             const post = await newPost.save()
             res.status(200).json(post)
@@ -17,7 +19,16 @@ const postControllers = {
             res.status(500).json(error)
         }
     },
-    
+    deletePost: async(req, res) => {
+        try{
+            await Post.findByIdAndDelete(req.params.postId)
+            res.status(200).json('delete successful')
+
+        }
+        catch(error){
+            res.status(500).json(error)
+        }
+    }
 
 }
 

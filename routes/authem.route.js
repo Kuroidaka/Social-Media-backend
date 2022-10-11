@@ -15,5 +15,7 @@ router.post('/login', authemControllers.login)
 router.post('/refresh', authemControllers.requestRefreshToken)
 
 // logout
-router.post('/logout/:id', middlewareController.verifyToken, authemControllers.logout)
+// router.post('/logout/:userId', middlewareController.verifyToken, authemControllers.logout)
+
+router.post('/logout/:userId', authemControllers.logout)
 module.exports = router

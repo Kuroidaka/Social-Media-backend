@@ -5,17 +5,21 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 const bodyParser = require('body-parser');
+const connect = require('./config/database')
+
+const photoRouter = require('./routes/photo.route')
 
 const routes = require('./routes/index')
-const db = require('./config/database')
 
-dotenv.config()
+
 const app = express()
+dotenv.config()
 
-// db.connect()
-mongoose.connect(process.env.MONGODB_URL, () => {
-    console.log('Connect to Database successfully')
-})        
+
+connect()
+
+// media routes
+
 
 
 app.use(
