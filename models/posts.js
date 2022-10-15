@@ -7,7 +7,7 @@ const Post = new Schema ({
     userId: {type: String},
     name: {type: String},
     avatarUrl: {type: String},
-    
+    imgUrl: {type: String},
 
 },{
     timestamps: true

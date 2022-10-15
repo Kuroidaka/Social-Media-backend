@@ -1,7 +1,7 @@
 const express = require('express')
+const fs = require('fs')
 // const storage = require('../middleware/upload')
 const File = require('../models/files')
-const fs = require('fs')
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -12,16 +12,14 @@ const storage = multer.diskStorage({
     }
 })
 const photoController = require('../controllers/file.controller')
-const upload = multer({ storage });
+const upload = multer({ storage })
 const router = express.Router()
 
 
 
-router.post('/upload/:userId/:postId', upload.single('file'), photoController.upload)
-router.get('/all', async (req,res)=>{
-    const allData = await File.find()
-    res.json(allData)
-  })
+router.post("/upload", upload.single("file"), photoController.upload);
+
+router.get("/:filename", photoController.getFile);
   
 
 // router.get('/all', photoController.getPhoto)

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
@@ -6,21 +7,17 @@ const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 const bodyParser = require('body-parser');
 const connect = require('./config/database')
-
-const photoRouter = require('./routes/photo.route')
-
+let Grid = require('gridfs-stream');
+const upload = require('./routes/photo.route')
 const routes = require('./routes/index')
-
-
+const fs = require('fs')
 const app = express()
+
+
 dotenv.config()
 
-
-connect()
-
-// media routes
-
-
+let gfs;
+connect();
 
 app.use(
     bodyParser.urlencoded({
@@ -36,8 +33,8 @@ app.use(express.json())
 routes(app)
 // app.use('/authem', authemRouter)
 
-
-app.listen('8000', () => {
+const port = process.env.PORT || 8000;
+app.listen(port, () => {
     console.log('listening on port 8000')
 })
 

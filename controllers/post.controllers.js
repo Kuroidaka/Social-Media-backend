@@ -10,8 +10,8 @@ const postControllers = {
                 userId: req.params.userId,
                 name: req.body.name,
                 avatarUrl: req.body.avatarUrl,
-
-            })
+                imgUrl: req.body.imgUrl
+            })  
             const post = await newPost.save()
             res.status(200).json(post)
         }
@@ -27,6 +27,24 @@ const postControllers = {
         }
         catch(error){
             res.status(500).json(error)
+        }
+    },
+    getAllPost: async(req, res) =>{
+        try {
+            const newPosts = await Post.find()
+            res.status(200).json(newPosts)
+
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    getByUser: async(req, res) =>{
+        try {
+            const newPosts = await Post.find({userId: req.params.userId})
+            res.status(200).json(newPosts)
+
+        } catch (error) {
+            console.log(error);
         }
     }
 
