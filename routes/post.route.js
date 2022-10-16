@@ -11,5 +11,7 @@ router.post('/createPost/:userId', postControllers.createPost)
 router.delete('/deletePost/:userId/:postId/:postUserId', middlewareController.verifyTokenAndAdminAuth, postControllers.deletePost)
 router.get('/getAll', postControllers.getAllPost)
 router.get('/get/:userId', postControllers.getByUser)
+router.post('/like/:postId', postControllers.like)
+
 
 module.exports = router

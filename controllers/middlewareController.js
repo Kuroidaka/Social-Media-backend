@@ -8,7 +8,7 @@ const middlewareController = {
         // console.log('params: ', req.params);
         const accessToken = req.cookies.accessToken
         // const token = req.headers.token
-        // console.log('--------------ACCESS TOKEN----------------', accessToken);
+        console.log('--------------ACCESS TOKEN----------------', accessToken);
         if(accessToken){
             // const accessToken = await token.split(' ')[1]
             jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, (error, data) => {
@@ -34,7 +34,7 @@ const middlewareController = {
                 next()
             }
             else 
-                res.status(403).json('you\'re not allow to delete')
+                res.status(403).json('you\'re not allow ')
         })
     }
 

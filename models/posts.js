@@ -8,7 +8,9 @@ const Post = new Schema ({
     name: {type: String},
     avatarUrl: {type: String},
     imgUrl: {type: String},
-
+    like: { type: Number, default: 0 },
+    userLike: { type: Array }
+    
 },{
     timestamps: true
 })

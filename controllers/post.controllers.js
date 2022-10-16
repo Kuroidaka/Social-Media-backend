@@ -46,6 +46,20 @@ const postControllers = {
         } catch (error) {
             console.log(error);
         }
+    },
+    like: async(req, res) =>{
+        console.log(req.query.userId);
+        try {
+            const post = await Post.updateOne( { _id : req.params.postId },
+                    {
+                        '$set':{'like': req.query.count},
+                        '$addToSet':{'userLike': req.query.userId } 
+                    } 
+                )
+            res.status(200).json(post)
+        } catch (error) {
+            console.log(error);
+        }        
     }
 
 }
