@@ -7,7 +7,7 @@ module.exports = async function connection() {
             useCreateIndex: true,
             useUnifiedTopology: true,
         };
-        await mongoose.connect('mongodb://localhost:27017/Social', connectionParams);
+        await mongoose.connect(process.env.MONGODB_URL, connectionParams);
         console.log("connected to database");
     } catch (error) {
         console.log(error);
